@@ -5,12 +5,12 @@ static NSString *const CUSTOM_URL_SCHEME = @"dlscheme";
 
 - (void)pluginInitialize {
     NSLog(@"Starting Firebase DynamicLinks plugin");
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(finishLaunching:) name:UIApplicationDidFinishLaunchingNotification object:nil];
+}
 
-    if (![FIRApp defaultApp]) {
-        [FIRApp configure];
-    }
-
-    self.domainUriPrefix = [self.commandDelegate.settings objectForKey:[@"DYNAMIC_LINK_URIPREFIX" lowercaseString]];
+- (void)finishLaunching:(NSNotification *)notification {
+    [FIROptions defaultOptions].deepLinkURLScheme = CUSTOM_URL_SCHEME;
+    [FIRApp configure];
 }
 
 - (void)onDynamicLink:(CDVInvokedUrlCommand *)command {
